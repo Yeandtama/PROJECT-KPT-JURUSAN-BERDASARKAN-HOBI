@@ -69,3 +69,45 @@ vector<Jurusan> buatDatabaseJurusan() {
         }},
     };
 }
+
+vector<Rekomendasi> hitungRekomendasi(
+    const Pengguna& pengguna,
+    const vector<Jurusan>& jurusan_list
+) {
+    vector<Rekomendasi> hasil;
+ 
+    for (const auto& j : jurusan_list) {
+        int skor = 0;
+        for (const auto& hobi : pengguna.hobi) {
+            auto it = j.bobot_hobi.find(hobi);
+            if (it != j.bobot_hobi.end()) {
+                skor += it->second;
+            }
+        }
+        hasil.push_back({j.nama, skor});
+    }
+ 
+    // Urutkan dari skor tertinggi
+    sort(hasil.begin(), hasil.end(), [](const Rekomendasi& a, const Rekomendasi& b) {
+        return a.skor > b.skor;
+    });
+ 
+    // Ambil top 3
+    if (hasil.size() > 3) hasil.resize(3);
+    return hasil;
+}
+ 
+void tampilkanHasil(const Pengguna& p, const vector<Rekomendasi>& rekomen) {
+    cout << "\n  Pengguna : " << p.nama << endl;
+    cout << "  Hobi     : ";
+    for (int i = 0; i < (int)p.hobi.size(); i++) {
+        cout << p.hobi[i];
+        if (i < (int)p.hobi.size()-1) cout << ", ";
+    }
+    cout << endl;
+    cout << "  Rekomendasi Jurusan:" << endl;
+    for (int i = 0; i < (int)rekomen.size(); i++) {
+        cout << "    " << (i+1) << ". " << rekomen[i].jurusan
+             << "  [Skor: " << rekomen[i].skor << "]" << endl;
+    }
+}

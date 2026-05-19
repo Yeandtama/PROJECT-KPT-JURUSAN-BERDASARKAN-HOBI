@@ -111,3 +111,33 @@ void tampilkanHasil(const Pengguna& p, const vector<Rekomendasi>& rekomen) {
              << "  [Skor: " << rekomen[i].skor << "]" << endl;
     }
 }
+int main() {
+    cout << "=============================================" << endl;
+    cout << "  PARALLELREC - Sistem Rekomendasi Jurusan  " << endl;
+    cout << "  Komputasi Paralel dengan C++ + OpenMP     " << endl;
+    cout << "=============================================" << endl;
+ 
+    vector<Pengguna> pengguna_list = {
+        {1, "Muhammad Nazril",    {"coding", "logika", "matematika", "algoritma"}},
+        {2, "Yeand Saltama",      {"menggambar", "desain", "kreatif", "seni"}},
+        {3, "Ian Grizeld Turang", {"elektronika", "robotika", "fisika", "logika"}},
+        {4, "Mikael Andiwij.",    {"bisnis", "komunikasi", "kepemimpinan", "sosial"}},
+        {5, "Pengguna 5",         {"biologi", "kimia", "sains", "membaca"}},
+        {6, "Pengguna 6",         {"menulis", "jurnalisme", "komunikasi", "fotografi"}},
+        {7, "Pengguna 7",         {"komputer", "data", "database", "analisis"}},
+        {8, "Pengguna 8",         {"musik", "seni", "kreatif", "desain"}},
+    };
+ 
+    auto jurusan_list = buatDatabaseJurusan();
+    int n = pengguna_list.size();
+ 
+    vector<vector<Rekomendasi>> semua_hasil(n);
+ 
+    cout << "\n[PARALEL] Jumlah thread: " << omp_get_max_threads() << endl;
+ 
+    auto start_paralel = high_resolution_clock::now();
+ 
+    #pragma omp parallel for schedule(static)
+    for (int i = 0; i < n; i++) {
+        semua_hasil[i] = hitungRekomendasi(pengguna_list[i], jurusan_list);
+    }

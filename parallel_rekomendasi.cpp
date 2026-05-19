@@ -141,3 +141,41 @@ int main() {
     for (int i = 0; i < n; i++) {
         semua_hasil[i] = hitungRekomendasi(pengguna_list[i], jurusan_list);
     }
+
+auto end_paralel = high_resolution_clock::now();
+    double waktu_paralel = duration<double, milli>(end_paralel - start_paralel).count();
+ 
+    cout << "\n===== HASIL REKOMENDASI (PARALEL) =====" << endl;
+    for (int i = 0; i < n; i++) {
+        tampilkanHasil(pengguna_list[i], semua_hasil[i]);
+    }
+ 
+    vector<vector<Rekomendasi>> hasil_seq(n);
+ 
+    auto start_seq = high_resolution_clock::now();
+ 
+    for (int i = 0; i < n; i++) {
+        hasil_seq[i] = hitungRekomendasi(pengguna_list[i], jurusan_list);
+    }
+ 
+    auto end_seq = high_resolution_clock::now();
+    double waktu_seq = duration<double, milli>(end_seq - start_seq).count();
+ 
+    cout << "\n\n=========================================" << endl;
+    cout << "  PERBANDINGAN PERFORMA (BENCHMARK)      " << endl;
+    cout << "=========================================" << endl;
+    cout << "  Jumlah pengguna   : " << n << endl;
+    cout << "  Jumlah jurusan    : " << jurusan_list.size() << endl;
+    cout << "-----------------------------------------" << endl;
+    cout << "  Waktu Sekuensial  : " << waktu_seq    << " ms" << endl;
+    cout << "  Waktu Paralel     : " << waktu_paralel << " ms" << endl;
+    cout << "-----------------------------------------" << endl;
+ 
+    if (waktu_paralel > 0) {
+        double speedup = waktu_seq / waktu_paralel;
+        cout << "  Speedup           : " << speedup << "x" << endl;
+    }
+    cout << "=========================================" << endl;
+ 
+    return 0;
+}

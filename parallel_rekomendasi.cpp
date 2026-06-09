@@ -9,7 +9,7 @@
  * Cara compile:
  *   g++ -fopenmp -O2 -o parallelrec parallelrec_v2.cpp
  *
- * Cara jalankan:
+ * Cara jalankaan:
  *   ./parallelrec
  * ============================================================
  */
